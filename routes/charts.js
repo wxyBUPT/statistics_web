@@ -35,33 +35,32 @@ var getLatestedMediaSUmmary = function () {
     }
 }
 //获得一段时间内某个爬虫爬取数据的情况
-var getCrawlerStatusByNameAndTime = function(
-    crawlerName
-){
-    return function (req,res){
+var getCrawlerStatusByNameAndTime;
+getCrawlerStatusByNameAndTime = function (crawlerName) {
+    return function (req, res) {
         var start = new Date(req.params.start);
         var end = new Date(req.params.end);
-        if(isNaN(start.getDate()) || isNaN(end.getDate())){
+        if (isNaN(start.getDate()) || isNaN(end.getDate())) {
             res.status(400).send("Illegal Data String");
             return
         }
         var coll = db.get().collection('crawl_history');
-        console.log(start ,end );
+        console.log(start, end);
         coll.find(
             {
-                crawler:crawlerName,
-                finish_time:{
-                    $gte:start,
-                    $lte:end
+                crawler: crawlerName,
+                finish_time: {
+                    $gte: start,
+                    $lte: end
                 }
             }
         ).toArray(
-            function (err,docs) {
+            function (err, docs) {
                 res.json(docs);
             }
         )
     }
-}
+};
 
 router.get('/', function (req,res,next) {
     res.send('get');
@@ -266,6 +265,306 @@ router.get('/totalCrawledFileSize',function(req,res){
         }
     })
 });
+/* 下面代码获得考拉对应的节目期数
+ {
+ "status": "ok",
+ "data": {
+ "title": "考拉FM",
+ "legend": ["节目期数"],
+ "xAxis": ["有声书", "音乐", "娱乐", "相声评书", "儿童", "3D体验馆", "资讯", "脱口秀", "情感生活", "历史人文", "外语", "教育培训",
+ "百家讲坛", "广播剧", "戏曲", "电台", "商业财经", "IT科技", "健康养生", "校园", "旅游", "汽车", "动漫游戏", "电影", "名校公开课",
+ "时尚生活", "其他"],
+ "series": [{
+ "name": "节目期数",
+ "data": ["34", "75", "12", "75", "12", "75", "12", "75", "12", "120", "56", "64", "18", "12", "75", "12", "75", "12", "120",
+ "56", "89", "58", "34", "75", "12", "75", "12"]
+ }],
+ "yUnit": "期"
+ },
+ "msg": "success"
+ }
+ */
+router.get('/kaolaCategoryAlbumCount', function (req,res) {
+    var coll = db.get().collection('media_summary');
+    coll.find({}).limit(1).sort({$naturan:-1}).toArray(function (err,docs) {
+        if(err){
+            res.status(404).send('dataNotFound');
+        }else{
+            var xAxis = [],
+                data = [];
+            var tmp = docs[0].kl.albumCountPerCategory;
+            for (var name in tmp){
+                xAxis.push(name);
+                data.push(tmp[name]);
+            }
+            var val = {
+                "status": "ok",
+                "data": {
+                    "title": "考拉FM",
+                    "legend": ["节目期数"],
+                    "xAxis": xAxis,
+                    "series": [{
+                        "name": "节目期数",
+                        "data": data,
+                    }],
+                    "yUnit": "期"
+                },
+                "msg": "success"
+            };
+            res.json(val);
+        }
+    })
+});
 
+/* 下面代码获得蜻蜓对应的节目期数
+ {
+ "status": "ok",
+ "data": {
+ "title": "蜻蜓FM",
+ "legend": ["节目期数"],
+ "xAxis": ["有声书", "音乐", "娱乐", "相声评书", "儿童", "3D体验馆", "资讯", "脱口秀", "情感生活", "历史人文", "外语", "教育培训",
+ "百家讲坛", "广播剧", "戏曲", "电台", "商业财经", "IT科技", "健康养生", "校园", "旅游", "汽车", "动漫游戏", "电影", "名校公开课",
+ "时尚生活", "其他"],
+ "series": [{
+ "name": "节目期数",
+ "data": ["34", "75", "12", "75", "12", "75", "12", "75", "12", "103", "56", "64", "18", "12", "75", "12", "75", "12", "110",
+ "56", "89", "58", "75", "12", "120", "56", "64"]
+ }],
+ "yUnit": "期"
+ },
+ "msg": "success"
+ }
+ */
+router.get('/qingtingCategoryAlbumCount', function (req,res) {
+    var coll = db.get().collection('media_summary');
+    coll.find({}).limit(1).sort({$naturan:-1}).toArray(function (err,docs) {
+        if(err){
+            res.status(404).send('dataNotFound');
+        }else{
+            var xAxis = [],
+                data = [];
+            var tmp = docs[0].qt.albumCountPerCategory;
+            for (var name in tmp){
+                xAxis.push(name);
+                data.push(tmp[name]);
+            }
+            var val = {
+                "status": "ok",
+                "data": {
+                    "title": "蜻蜓FM",
+                    "legend": ["节目期数"],
+                    "xAxis": xAxis,
+                    "series": [{
+                        "name": "节目期数",
+                        "data": data,
+                    }],
+                    "yUnit": "期"
+                },
+                "msg": "success"
+            };
+            res.json(val);
+        }
+    })
+});
+/* 下面代码获得喜马拉雅对应的节目期数
+ {
+ "status": "ok",
+ "data": {
+ "title": "喜马拉雅FM",
+ "legend": ["节目期数"],
+ "xAxis": ["有声书", "音乐", "娱乐", "相声评书", "儿童", "3D体验馆", "资讯", "脱口秀", "情感生活", "历史人文", "外语", "教育培训",
+ "百家讲坛", "广播剧", "戏曲", "电台", "商业财经", "IT科技", "健康养生", "校园", "旅游", "汽车", "动漫游戏", "电影", "名校公开课",
+ "时尚生活", "其他"],
+ "series": [{
+ "name": "节目期数",
+ "data": ["120", "56", "89", "58", "34", "75", "12", "75", "12", "120", "56", "89", "58", "34", "75", "12", "75", "12", "120",
+ "56", "89", "58", "34", "75", "12", "75", "12"]
+ }],
+ "yUnit": "期"
+ },
+ "msg": "success"
+ }
+ */
+router.get('/xmlyCategoryAlbumCount', function (req,res) {
+    var coll = db.get().collection('media_summary');
+    coll.find({}).limit(1).sort({$naturan:-1}).toArray(function (err,docs) {
+        if(err){
+            res.status(404).send('dataNotFound');
+        }else{
+            var xAxis = [],
+                data = [];
+            var tmp = docs[0].xmly.albumCountPerCategory;
+            for (var name in tmp){
+                xAxis.push(name);
+                data.push(tmp[name]);
+            }
+            var val = {
+                "status": "ok",
+                "data": {
+                    "title": "喜马拉雅FM",
+                    "legend": ["节目期数"],
+                    "xAxis": xAxis,
+                    "series": [{
+                        "name": "节目期数",
+                        "data": data,
+                    }],
+                    "yUnit": "期"
+                },
+                "msg": "success"
+            };
+            res.json(val);
+        }
+    })
+});
 
+/*下面代码获得考拉的音频数量
+ {
+ "status": "ok",
+ "data": {
+ "title": "考拉FM",
+ "legend": ["音频数量"],
+ "xAxis": ["有声书", "音乐", "娱乐", "相声评书", "儿童", "3D体验馆", "资讯", "脱口秀", "情感生活", "历史人文", "外语", "教育培训",
+ "百家讲坛", "广播剧", "戏曲", "电台", "商业财经", "IT科技", "健康养生", "校园", "旅游", "汽车", "动漫游戏", "电影", "名校公开课",
+ "时尚生活", "其他"],
+ "series": [{
+ "name": "音频数量",
+ "data": ["34", "75", "12", "75", "12", "75", "12", "75", "12", "120", "56", "64", "18", "12", "75", "12", "75", "12", "120",
+ "56", "89", "58", "34", "75", "12", "75", "12"]
+ }],
+ "yUnit": "个"
+ },
+ "msg": "success"
+ }
+ */
+router.get('/kaolaCategoryAudioCount', function (req,res) {
+    var coll = db.get().collection('media_summary');
+    coll.find({}).limit(1).sort({$naturan:-1}).toArray(function (err,docs) {
+        if(err){
+            res.status(404).send('dataNotFound');
+        }else{
+            var xAxis = [],
+                data = [];
+            var tmp = docs[0].kl.audioCountPerCategory;
+            for (var name in tmp){
+                xAxis.push(name);
+                data.push(tmp[name]);
+            }
+            var val = {
+                "status": "ok",
+                "data": {
+                    "title": "考拉FM",
+                    "legend": ["音频数量"],
+                    "xAxis": xAxis,
+                    "series": [{
+                        "name": "音频数量",
+                        "data": data,
+                    }],
+                    "yUnit": "个"
+                },
+                "msg": "success"
+            };
+            res.json(val);
+        }
+    })
+});
+//13752002090
+/*获得xmly 中的音频数量
+ */
+router.get('/xmlyCategoryAudioCount', function (req,res) {
+    var coll = db.get().collection('media_summary');
+    coll.find({}).limit(1).sort({$naturan:-1}).toArray(function (err,docs) {
+        if(err){
+            res.status(404).send('dataNotFound');
+        }else{
+            var xAxis = [],
+                data = [];
+            var tmp = docs[0].xmly.audioCountPerCategory;
+            for (var name in tmp){
+                xAxis.push(name);
+                data.push(tmp[name]);
+            }
+            var val = {
+                "status": "ok",
+                "data": {
+                    "title": "喜马拉雅FM",
+                    "legend": ["音频数量"],
+                    "xAxis": xAxis,
+                    "series": [{
+                        "name": "音频数量",
+                        "data": data,
+                    }],
+                    "yUnit": "个"
+                },
+                "msg": "success"
+            };
+            res.json(val);
+        }
+    })
+});
+//获得蜻蜓FM 中的音频数量
+router.get('/qtCategoryAudioCount', function (req,res) {
+    var coll = db.get().collection('media_summary');
+    coll.find({}).limit(1).sort({$naturan:-1}).toArray(function (err,docs) {
+        if(err){
+            res.status(404).send('dataNotFound');
+        }else{
+            var xAxis = [],
+                data = [];
+            var tmp = docs[0].qt.audioCountPerCategory;
+            for (var name in tmp){
+                xAxis.push(name);
+                data.push(tmp[name]);
+            }
+            var val = {
+                "status": "ok",
+                "data": {
+                    "title": "蜻蜓FM",
+                    "legend": ["音频数量"],
+                    "xAxis": xAxis,
+                    "series": [{
+                        "name": "音频数量",
+                        "data": data,
+                    }],
+                    "yUnit": "个"
+                },
+                "msg": "success"
+            };
+            res.json(val);
+        }
+    })
+});
+//10.109.245.13/trunk
+
+//获得考拉FM 中音频的数量
+router.get('/kaolaCategoryAudioCount', function (req,res) {
+    var coll = db.get().collection('media_summary');
+    coll.find({}).limit(1).sort({$naturan:-1}).toArray(function (err,docs) {
+        if(err){
+            res.status(404).send('dataNotFound');
+        }else{
+            var xAxis = [],
+                data = [];
+            var tmp = docs[0].kl.audioCountPerCategory;
+            for (var name in tmp){
+                xAxis.push(name);
+                data.push(tmp[name]);
+            }
+            var val = {
+                "status": "ok",
+                "data": {
+                    "title": "考拉FM",
+                    "legend": ["音频数量"],
+                    "xAxis": xAxis,
+                    "series": [{
+                        "name": "音频数量",
+                        "data": data,
+                    }],
+                    "yUnit": "个"
+                },
+                "msg": "success"
+            };
+            res.json(val);
+        }
+    })
+});
 module.exports = router;

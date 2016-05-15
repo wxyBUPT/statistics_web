@@ -1,0 +1,7 @@
+* {
+	font-family: Arial, "微软雅黑","宋体";
+}
+
+.nav .active {
+	font-weight: bold;
+}

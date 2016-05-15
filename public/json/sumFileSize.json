@@ -1,0 +1,20 @@
+{
+	"status": "ok",
+	"data": {
+		"title": "总媒体文件存储大小",
+		"legend": ["喜马拉雅FM", "考拉FM", "蜻蜓FM"],
+		"seriesName": "文件存储大小",
+		"seriesData": [{
+			"name": "喜马拉雅FM",
+			"value": "2.54"
+		}, {
+			"name": "考拉FM",
+			"value": "9.52"
+		}, {
+			"name": "蜻蜓FM",
+			"value": "1.12"
+		}],
+		"unit": "T"
+	},
+	"msg": "success"
+}

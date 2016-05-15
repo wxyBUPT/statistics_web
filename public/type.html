@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<head>
+	<title>爬虫管理</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script src="js/echarts.common.min.js"></script>
+    <script src="js/jquery-1.12.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body>
+	<nav class="navbar navbar-default">
+		<div class="container">
+			<ul class="nav navbar-nav">
+		        <li><a href="index.html">爬取基本数据统计</a></li>
+		        <li class="active"><a href="#">点播网站分类爬取统计</a></li>
+		        <li><a href="#">异常监控统计</a></li>
+	        </ul>
+		</div>
+	</nav>
+	
+	<div class="container">
+		<div class="panel panel-primary">
+			<div class="panel-heading">点播网站分类爬取量统计</div>
+			<div class="panel-body">
+				<div id="ximalaya" style="height:300px"></div>
+				<div id="dragonfly" style="height:300px"></div>
+				<div id="koala" style="height:300px"></div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	var list = [{
+		url: "json/ximalaya.json",
+		type: "get",
+		chartType: "bar",
+		color: ["#61a0a8"],
+		Id: "ximalaya"
+	}, {
+		url: "json/dragonfly.json",
+		type: "get",
+		chartType: "bar",
+		color: ["#d48265"],
+		Id: "dragonfly"
+	}, {
+		url: "json/koala.json",
+		type: "get",
+		chartType: "bar",
+		color: ["#c4ccd3"],
+		Id: "koala"
+	}];
+	var methods = {
+		buildBarChart: function(id, data) {
+			var myChart = echarts.init(document.getElementById(id));
+			var option = {
+			    title : {
+			        text: data.title
+			    },
+			    tooltip : {
+			        trigger: 'axis'
+			    },
+			    legend: {
+			        data: data.legend
+			    },
+			    toolbox: {
+			        show : true,
+			        feature : {
+			            saveAsImage : {
+							show : true,
+							title : '保存为图片',
+							type : 'png',
+							lang : [ '点击保存' ]
+						}
+			        }
+			    },
+			    calculable : true,
+			    xAxis : [
+			        {
+			            type : 'category',
+			            data : data.xAxis
+			        }
+			    ],
+			    yAxis : [
+			        {
+			            type : 'value',
+			            axisLabel: {
+							formatter: '{value} ' + data.yUnit
+						}
+			        }
+			    ],
+			    series : data.series,
+			    color: data.color
+			};
+			myChart.setOption(option);
+		}
+	};
+	list.forEach(function(item, index, array) {
+		$.ajax({
+			url: item.url,
+			type: item.type,
+			dataType: 'json',
+			success: function(data) {
+				if (data.status == "ok") {
+					if (item.chartType == "bar") {
+						for (var i = 0; i < data.data.series.length; i++) {
+							data.data.series[i].type = "bar";
+							data.data.series[i].barWidth = 20;
+						}
+						data.data.color = item.color;
+						methods.buildBarChart(item.Id, data.data);
+					}
+				} else {
+					alert(data.msg);
+				}
+			},
+			error: function() {
+				alert(item.url + " error");
+			}
+		});
+	});
+</script>
+</html>
+

@@ -1,0 +1,20 @@
+{
+	"status": "ok",
+	"data": {
+		"title": "点播总爬取量",
+		"legend": ["喜马拉雅FM", "考拉FM", "蜻蜓FM"],
+		"seriesName": "总爬取量",
+		"seriesData": [{
+			"name": "喜马拉雅FM",
+			"value": "1235"
+		}, {
+			"name": "考拉FM",
+			"value": "5126"
+		}, {
+			"name": "蜻蜓FM",
+			"value": "982"
+		}],
+		"unit": "期"
+	},
+	"msg": "success"
+}

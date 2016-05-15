@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<head>
+	<title>爬虫管理</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script src="js/echarts.common.min.js"></script>
+    <script src="js/jquery-1.12.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body>
+	<nav class="navbar navbar-default">
+		<div class="container">
+			<ul class="nav navbar-nav">
+		        <li class="active"><a href="#">爬取基本数据统计</a></li>
+		        <li><a href="type.html">点播网站分类爬取统计</a></li>
+		        <li><a href="#">异常监控统计</a></li>
+	        </ul>
+		</div>
+	</nav>
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-md-10 col-xs-12">
+				<div class="panel panel-primary">
+					<div class="panel-heading">点播相关指标统计</div>
+					<div class="panel-body">
+						<div id="dailySpider" style="height:300px"></div>
+						<div id="dailyFile" style="height:300px"></div>
+						<hr />
+						<div class="row">
+							<div id="sumSpider" class="col-xs-12 col-md-6 col-lg-6" style="height:400px"></div>
+							<div id="sumFile" class="col-xs-12 col-md-6 col-lg-6" style="height:400px"></div>
+							<div id="sumFileSize" class="col-xs-12 col-md-6 col-lg-6" style="height:400px"></div>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-primary">
+					<div class="panel-heading">直播相关指标统计</div>
+					<div class="panel-body">
+						<div id="liveDailySpider" style="height:300px"></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-2 hidden-xs">
+				<nav class="bs-docs-sidebar hidden-xs hidden-sm affix">
+					<ul class="nav bs-docs-sidenav">
+						<li><a href="#dailySpider">点播日爬取量</a></li>
+						<li><a href="#dailyFile">点播日爬取媒体文件数量</a></li>
+						<li><a href="#sumSpider">点播总爬取量</a></li>
+						<li><a href="#sumFile">总媒体文件数量</a></li>
+						<li><a href="#sumFileSize">总媒体文件大小</a></li>
+						<li><a href="#liveDailySpider">直播日爬取量</a></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+		
+	</div>
+</body>
+<script type="text/javascript">
+	var list = [{
+		url: "json/dailySpider.json",
+		type: "get",
+		chartType: "line",
+		Id: "dailySpider"
+	}, {
+		url: "json/dailyFile.json",
+		type: "get",
+		chartType: "line",
+		Id: "dailyFile"
+	}, {
+		url: "/charts/totalCrawledAlbumCount",
+		type: "get",
+		chartType: "circle",
+		Id: "sumSpider"
+	}, {
+		url: "/charts/totalCrawledAudioCount",
+		type: "get",
+		chartType: "circle",
+		Id: "sumFile"
+	}, {
+		url: "/charts/totalCrawledFileSize",
+		type: "get",
+		chartType: "circle",
+		Id: "sumFileSize"
+	}, {
+		url: "json/liveDailySpider.json",
+		type: "get",
+		chartType: "line",
+		Id: "liveDailySpider"
+	}];
+	var methods = {
+		buildLineChart: function(id, data) {
+			var myChart = echarts.init(document.getElementById(id));
+			var option = {
+				title: {
+					text: data.title
+				},
+				tooltip: {
+					trigger : 'axis'
+				},
+				toolbox: {
+					show : true,
+					feature : {
+						saveAsImage : {
+							show : true,
+							title : '保存为图片',
+							type : 'png',
+							lang : [ '点击保存' ]
+						}
+					}
+				},
+				legend: {
+					data: data.legend
+				},
+				calculable: true,
+				xAxis: [{
+					type: 'category',
+					boundaryGap: false,
+					data: data.xAxis
+					//data : data.timeList
+				}],
+				yAxis: [{
+					type: 'value',
+					axisLabel: {
+						formatter: '{value} ' + data.yUnit
+					}
+				}],
+				series: data.series
+			};
+			myChart.setOption(option);
+		},
+		buildCircleChart: function(id, data) {
+			var myChart = echarts.init(document.getElementById(id));
+			var option = {
+			    title : {
+			        text: data.title,
+			        x:'center'
+			    },
+			    tooltip : {
+			        trigger: 'item',
+			        formatter: "{a} <br/>{b} : {c}" + data.unit + " ({d}%)"
+			    },
+			    legend: {
+			        orient: 'vertical',
+			        left: 'left',
+			        data: data.legend
+			    },
+			    series : [{
+		            name: data.seriesName,
+		            type: 'pie',
+		            radius : '55%',
+		            center: ['50%', '60%'],
+		            data: data.seriesData,
+		            itemStyle: {
+		                emphasis: {
+		                    shadowBlur: 10,
+		                    shadowOffsetX: 0,
+		                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+		                }
+		            }
+		        }]
+			};
+			myChart.setOption(option);
+		}
+	};
+	list.forEach(function(item, index, array) {
+		$.ajax({
+			url: item.url,
+			type: item.type,
+			dataType: 'json',
+			success: function(data) {
+				if (data.status == "ok") {
+					if (item.chartType == "line") {
+						for (var i = 0; i < data.data.series.length; i++) {
+							data.data.series[i].type = "line";
+						}
+						methods.buildLineChart(item.Id, data.data);
+					} else if (item.chartType == "circle") {
+						methods.buildCircleChart(item.Id, data.data);
+					}
+				} else {
+					alert(data.msg);
+				}
+			},
+			error: function() {
+				alert(item.url + " error");
+			}
+		});
+	});
+</script>
+</html>
+

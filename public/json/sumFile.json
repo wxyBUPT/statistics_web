@@ -1,0 +1,20 @@
+{
+	"status": "ok",
+	"data": {
+		"title": "总媒体文件数量",
+		"legend": ["喜马拉雅FM", "考拉FM", "蜻蜓FM"],
+		"seriesName": "文件数量",
+		"seriesData": [{
+			"name": "喜马拉雅FM",
+			"value": "2548"
+		}, {
+			"name": "考拉FM",
+			"value": "9852"
+		}, {
+			"name": "蜻蜓FM",
+			"value": "1123"
+		}],
+		"unit": "个"
+	},
+	"msg": "success"
+}

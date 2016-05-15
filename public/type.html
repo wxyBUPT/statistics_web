@@ -32,23 +32,41 @@
 </body>
 <script type="text/javascript">
 	var list = [{
-		url: "json/ximalaya.json",
+		url: "charts/kaolaCategoryAlbumCount",
 		type: "get",
 		chartType: "bar",
 		color: ["#61a0a8"],
-		Id: "ximalaya"
+		Id: "kaola"
 	}, {
-		url: "json/dragonfly.json",
+		url: "charts/qingtingCategoryAlbumCount",
 		type: "get",
 		chartType: "bar",
 		color: ["#d48265"],
-		Id: "dragonfly"
+		Id: "qingting"
 	}, {
-		url: "json/koala.json",
+		url: "charts/xmlyCategoryAlbumCount",
 		type: "get",
 		chartType: "bar",
 		color: ["#c4ccd3"],
-		Id: "koala"
+		Id: "ximalaya"
+	},{
+		url: "charts/kaolaCategoryAudioCount",
+		type: "get",
+		chartType: "bar",
+		color: ["#61a0a8"],
+		Id: "kaolaAudio"
+	},{
+		url: "charts/qinttingCategoryAudioCount",
+		type: "get",
+		chartType: "bar",
+		color: ["#61a0a8"],
+		Id: "qingtingAudio"
+	},{
+		url: "charts/xmlyCategoryAudioCount",
+		type: "get",
+		chartType: "bar",
+		color: ["#61a0a8"],
+		Id: "xmlyAudio"
 	}];
 	var methods = {
 		buildBarChart: function(id, data) {

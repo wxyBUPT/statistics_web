@@ -781,7 +781,7 @@ router.get('/dailyCrawlAudioCount', function (req,res) {
                             "name": "蜻蜓FM",
                             "data": qtData
                         }],
-                        "yUnit": "期"
+                        "yUnit": "首"
                     },
                     "msg": "success"
                 };

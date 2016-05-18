@@ -601,7 +601,7 @@ if (!Array.prototype.find) {
 //获得dailySpider 每日爬取的期数
 router.get('/dailyCrawlAlbumCount', function (req,res) {
     "use strict";
-    var coll = db.get().collection('daily');
+    var coll = db.getSpiderDb().collection('daily');
     //找最近七天的爬取数据并以接口的形式返回
     var start = new Date();
     start.setDate(start.getDate()-7);
@@ -696,7 +696,7 @@ router.get('/dailyCrawlAlbumCount', function (req,res) {
     )
 });
 router.get('/dailyCrawlAudioCount', function (req,res) {
-    var coll = db.get().collection('daily');
+    var coll = db.getSpiderDb().collection('daily');
     //找最近七天的爬取数据并以接口的形式返回
     var start = new Date();
     start.setDate(start.getDate()-7);

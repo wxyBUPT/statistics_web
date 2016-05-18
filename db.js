@@ -5,6 +5,7 @@
 var MongoClient = require('mongodb').MongoClient;
 var state = {
     db:null,
+    spider_db : null
 };
 
 exports.connect = function(url,done){
@@ -29,3 +30,16 @@ exports.close = function (done) {
         });
     }
 };
+
+exports.connectSpiderDb = function (url,done) {
+    if(state.spider_db)return done();
+    MongoClient.connect(url, function (err,db) {
+        if(err) return done(err);
+        state.spider_db = db;
+        done();
+    })
+};
+
+exports.getSpiderDb = function () {
+    return state.spider_db;
+}

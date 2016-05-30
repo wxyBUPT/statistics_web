@@ -695,7 +695,6 @@ router.get('/dailyCrawlAlbumCount', function (req,res) {
         }
     )
 });
-
 router.get('/dailyCrawlAudioCount', function (req,res) {
     var coll = db.getSpiderDb().collection('daily');
     //找最近七天的爬取数据并以接口的形式返回
@@ -721,6 +720,7 @@ router.get('/dailyCrawlAudioCount', function (req,res) {
                 }
             }
         ]
+
     ).toArray(
         function (err,docs) {
             if(err){
@@ -790,92 +790,4 @@ router.get('/dailyCrawlAudioCount', function (req,res) {
         }
     )
 });
-
-router.get('/dailyCrawlLiveCount', function (req,res) {
-    var coll = db.getSpiderDb().collection('daily');
-    var start = new Date();
-    start.setDate(start.getDate()-7);
-    var end = new Date();
-    coll.aggregate(
-        [
-            {
-                $match:{
-                    day:{
-                        $gte:start,
-                        $lte:end
-                    }
-                }
-            },
-            {
-                $group:{
-                    _id:"$key",
-                    data:{
-                        $push:{day:"$day",count:"$crawledCount"}
-                    }
-                }
-            }
-        ]
-    ).toArray(
-        function (err,docs) {
-            if(err){
-                res.status(404).send('dataNotFound');
-            }else {
-                var tmpDocs = {};
-                docs.forEach(
-                    function (doc) {
-                        tmpDocs[doc['_id']] = new Array;
-                        doc['data'].forEach(
-                            function (item) {
-                                var key = item['day'].toISOString().split('T')[0];
-                                var value = item['count'];
-                                tmpDocs[doc['_id']].push({
-                                    day:key,
-                                    count:value
-                                })
-                            }
-                        );
-                    }
-                );
-                var xAxis = [],
-                    EPGData = [],
-                    live_sourceDate = [];
-                var i_find = function(dataString){
-                    return function (dayInfo) {
-                        return dayInfo.day === dataString
-                    }
-                };
-                for(var tmp = start;tmp<=end;tmp.setDate(tmp.getDate()+1)){
-                    var dataString = tmp.toISOString().split('T')[0];
-                    var m_find = i_find(dataString);
-                    xAxis.push(dataString);
-                    console.log(tmpDocs);
-                    var EPGValue = tmpDocs['EPG'].find(m_find);
-                    EPGValue = EPGValue ? EPGValue.count : 0;
-                    EPGData.push(EPGValue);
-                    var lvData= tmpDocs['live_source'].find(m_find);
-                    lvData= lvData? lvData.count:0;
-                    live_sourceDate.push(lvData);
-                }
-                var val = {
-                    "status": "ok",
-                    "data": {
-                        "title": "直播日爬取量",
-                        "legend": ["EPG", "live_source"],
-                        "xAxis":xAxis,
-                        "series": [{
-                            "name": "EPG",
-                            "data":EPGData
-                        }, {
-                            "name": "live_source",
-                            "data": live_sourceDate,
-                        }],
-                        "yUnit": "首"
-                    },
-                    "msg": "success"
-                };
-                res.json(val);
-            }
-        }
-    )
-})
 module.exports = router;

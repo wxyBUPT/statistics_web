@@ -666,6 +666,7 @@ router.get('/dailyCrawlAlbumCount', function (req,res) {
                     var klValue = tmpDocs['kl_album'].find(m_find);
                     klValue = klValue ? klValue.count:0;
                     klData.push(klValue);
+                    console.log(tmpDocs)
                     var qtValue = tmpDocs['qt_album'].find(m_find);
                     qtValue = qtValue ? qtValue.count:0;
                     qtData.push(qtValue);

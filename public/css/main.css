@@ -5,17 +5,3 @@
 .nav .active {
 	font-weight: bold;
 }
-
-.nav .title {
-	font-weight: bold;
-	font-size: 16px;
-}
-
-.nav .nav {
-	display: block;
-	padding-left: 20px;
-	font-size: 14px;
-}
-.nav .nav a {
-	color: #777777;
-}

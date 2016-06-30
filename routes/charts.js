@@ -566,6 +566,7 @@ router.get('/kaolaCategoryAudioCount', function (req,res) {
         }
     })
 });
+
 if (!Array.prototype.find) {
     Object.defineProperty(Array.prototype, 'find', {
         enumerable: false,
@@ -659,13 +660,22 @@ router.get('/dailyCrawlAlbumCount', function (req,res) {
                     var dataString = tmp.toISOString().split('T')[0];
                     var m_find = i_find(dataString);
                     xAxis.push(dataString);
-                    var xmlyValue = tmpDocs['xmly_album'].find(m_find);
+                    var xmlyValue;
+                    if(tmpDocs['xmly_album']!=null) {
+                        xmlyValue = tmpDocs['xmly_album'].find(m_find);
+                    }
                     xmlyValue = xmlyValue ? xmlyValue.count : 0;
                     xmlyData.push(xmlyValue);
-                    var klValue = tmpDocs['kl_album'].find(m_find);
+                    var klValue;
+                    if(tmpDocs['kl_album']) {
+                        klValue = tmpDocs['kl_album'].find(m_find);
+                    }
                     klValue = klValue ? klValue.count:0;
                     klData.push(klValue);
-                    var qtValue = tmpDocs['qt_album'].find(m_find);
+                    var qtValue;
+                    if(tmpDocs['qt_album']) {
+                        qtValue = tmpDocs['qt_album'].find(m_find);
+                    }
                     qtValue = qtValue ? qtValue.count:0;
                     qtData.push(qtValue);
                 }
@@ -754,13 +764,22 @@ router.get('/dailyCrawlAudioCount', function (req,res) {
                     var dataString = tmp.toISOString().split('T')[0];
                     var m_find = i_find(dataString);
                     xAxis.push(dataString);
-                    var xmlyValue = tmpDocs['xmly_audio'].find(m_find);
+                    var xmlyValue;
+                    if(tmpDocs['xmly_audio']!=null) {
+                        xmlyValue = tmpDocs['xmly_audio'].find(m_find);
+                    }
                     xmlyValue = xmlyValue ? xmlyValue.count : 0;
                     xmlyData.push(xmlyValue);
-                    var klValue = tmpDocs['kl_audio'].find(m_find);
+                    var klValue;
+                    if(tmpDocs['kl_audio'] != null) {
+                        klValue = tmpDocs['kl_audio'].find(m_find);
+                    }
                     klValue = klValue ? klValue.count:0;
                     klData.push(klValue);
-                    var qtValue = tmpDocs['qt_audio'].find(m_find);
+                    var qtValue;
+                    if(tmpDocs['qt_audio'] != null) {
+                        qtValue = tmpDocs['qt_audio'].find(m_find);
+                    }
                     qtValue = qtValue ? qtValue.count:0;
                     qtData.push(qtValue);
                 }
@@ -847,12 +866,20 @@ router.get('/dailyCrawlLiveCount', function (req,res) {
                     var dataString = tmp.toISOString().split('T')[0];
                     var m_find = i_find(dataString);
                     xAxis.push(dataString);
-                    var EPGValue = tmpDocs['EPG'].find(m_find);
-                    EPGValue = EPGValue ? EPGValue.count : 0;
-                    EPGData.push(EPGValue);
-                    var lvData= tmpDocs['live_source'].find(m_find);
-                    lvData= lvData? lvData.count:0;
-                    live_sourceDate.push(lvData);
+                    if(tmpDocs['EPG'] != null) {
+                        var EPGValue = tmpDocs['EPG'].find(m_find);
+                        EPGValue = EPGValue ? EPGValue.count : 0;
+                        EPGData.push(EPGValue);
+                    }else {
+                        EPGData.push(0);
+                    }
+                    if(tmpDocs['live_source'] != null) {
+                        var lvData = tmpDocs['live_source'].find(m_find);
+                        lvData = lvData ? lvData.count : 0;
+                        live_sourceDate.push(lvData);
+                    }else {
+                        live_sourceDate.push(0);
+                    }
                 }
                 var val = {
                     "status": "ok",

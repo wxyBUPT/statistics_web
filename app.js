@@ -59,7 +59,7 @@ app.use(function(err, req, res, next) {
   });
 });
 //connect to mongo
-db.connect('mongodb://114.112.103.33/crawl_info', function (err) {
+db.connect('mongodb://*.*.*.*/crawl_info', function (err) {
   if(err){
     console.log('Unable to connect to Mongo.');
     process.exit(1);
@@ -68,7 +68,7 @@ db.connect('mongodb://114.112.103.33/crawl_info', function (err) {
   }
 });
 
-db.connectSpiderDb('mongodb://114.112.103.33/test_spider', function (err) {
+db.connectSpiderDb('mongodb://*.*.*.*/test_spider', function (err) {
   if(err){
     console.log('Unable to connect to Spider DB');
   }else {

@@ -33,7 +33,8 @@ var getLatestedMediaSUmmary = function () {
             res.json(docs);
         });
     }
-}
+};
+
 //获得一段时间内某个爬虫爬取数据的情况
 var getCrawlerStatusByNameAndTime;
 getCrawlerStatusByNameAndTime = function (crawlerName) {
@@ -95,7 +96,6 @@ router.get('/fileSize/all',getLatestedMediaSUmmary());
 router.get('/crawlHistory/kaolaEPG/:start/:end',getCrawlerStatusByNameAndTime(
     'kaolaEPG'
 ));
-
 
 /*
 获得点播总爬取量

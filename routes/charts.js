@@ -20,7 +20,7 @@ var getRealTimeFor = function(collectionName){
                 _id:0
             }
         ).limit(100).toArray(function (err,docs) {
-            res.json(docs);
+            res.jsonp(docs);
         });
     }
 };
@@ -30,7 +30,7 @@ var getLatestedMediaSUmmary = function () {
         var coll = db.get().collection('media_summary');
         coll.find({
         }).limit(1).sort({$natural:-1}).toArray(function (err,docs) {
-            res.json(docs);
+            res.jsonp(docs);
         });
     }
 };
@@ -56,7 +56,7 @@ getCrawlerStatusByNameAndTime = function (crawlerName) {
             }
         ).toArray(
             function (err, docs) {
-                res.json(docs);
+                res.jsonp(docs);
             }
         )
     }
@@ -79,7 +79,7 @@ router.get('/realTime/kaolaEPG', function (req,res) {
             _id:0
         }
     ).toArray(function (err,docs) {
-        res.json(docs);
+        res.jsonp(docs);
     });
 });
 router.get('/realTime/xmly',getRealTimeFor('xmly'));
@@ -150,7 +150,7 @@ router.get('/totalCrawledAlbumCount', function (req,res) {
                 },
                 msg:"success"
             };
-            res.json(val)
+            res.jsonp(val)
         }
     })
 });
@@ -260,7 +260,7 @@ router.get('/totalCrawledFileSize',function(req,res){
                 },
                 msg:"success"
             };
-            res.json(val);
+            res.jsonp(val);
         }
     })
 });
@@ -310,7 +310,7 @@ router.get('/kaolaCategoryAlbumCount', function (req,res) {
                 },
                 "msg": "success"
             };
-            res.json(val);
+            res.jsonp(val);
         }
     })
 });
@@ -361,7 +361,7 @@ router.get('/qingtingCategoryAlbumCount', function (req,res) {
                 },
                 "msg": "success"
             };
-            res.json(val);
+            res.jsonp(val);
         }
     })
 });
@@ -411,7 +411,7 @@ router.get('/xmlyCategoryAlbumCount', function (req,res) {
                 },
                 "msg": "success"
             };
-            res.json(val);
+            res.jsonp(val);
         }
     })
 });
@@ -462,7 +462,7 @@ router.get('/kaolaCategoryAudioCount', function (req,res) {
                 },
                 "msg": "success"
             };
-            res.json(val);
+            res.jsonp(val);
         }
     })
 });
@@ -496,7 +496,7 @@ router.get('/xmlyCategoryAudioCount', function (req,res) {
                 },
                 "msg": "success"
             };
-            res.json(val);
+            res.jsonp(val);
         }
     })
 });
@@ -528,7 +528,7 @@ router.get('/qtCategoryAudioCount', function (req,res) {
                 },
                 "msg": "success"
             };
-            res.json(val);
+            res.jsonp(val);
         }
     })
 });
@@ -562,7 +562,7 @@ router.get('/kaolaCategoryAudioCount', function (req,res) {
                 },
                 "msg": "success"
             };
-            res.json(val);
+            res.jsonp(val);
         }
     })
 });
@@ -699,7 +699,7 @@ router.get('/dailyCrawlAlbumCount', function (req,res) {
                     },
                     "msg": "success"
                 };
-                res.json(val);
+                res.jsonp(val);
             }
         }
     )
@@ -803,7 +803,7 @@ router.get('/dailyCrawlAudioCount', function (req,res) {
                     },
                     "msg": "success"
                 };
-                res.json(val);
+                res.jsonp(val);
             }
         }
     )
@@ -898,7 +898,7 @@ router.get('/dailyCrawlLiveCount', function (req,res) {
                     },
                     "msg": "success"
                 };
-                res.json(val);
+                res.jsonp(val);
             }
         }
     )
